@@ -9,23 +9,26 @@ Unified real-time search engine skill for AI agents. Supports general web search
 If your agent platform supports a skill marketplace/store, search for **anysearch** and install from there. Otherwise, download and install manually:
 
 ```bash
-# Download
-curl -L -o anysearch-skill.zip https://github.com/anysearch-ai/anysearch-skill/archive/refs/heads/main.zip
-# or: wget -O anysearch-skill.zip https://github.com/anysearch-ai/anysearch-skill/archive/refs/heads/main.zip
+# Download (pin to a specific release version)
+curl -L -o anysearch-skill.zip https://github.com/anysearch-ai/anysearch-skill/archive/refs/tags/v2.0.0.zip
+# or: wget -O anysearch-skill.zip https://github.com/anysearch-ai/anysearch-skill/archive/refs/tags/v2.0.0.zip
+
+# Verify integrity (replace with actual checksum from the release page)
+# sha256sum anysearch-skill.zip
 
 # Unzip
 unzip anysearch-skill.zip
 
 # Move to your agent's skill directory (example paths below, adjust for your agent)
-# Claude Code:    mv anysearch-skill-main ~/.claude/skills/anysearch
-# OpenCode:       mv anysearch-skill-main ~/.opencode/skills/anysearch
-# Cursor/Windsurf: mv anysearch-skill-main <project>/.skills/anysearch
-# Generic:        mv anysearch-skill-main <your_agent_skill_dir>/anysearch
+# Claude Code:    mv anysearch-skill-2.0.0 ~/.claude/skills/anysearch
+# OpenCode:       mv anysearch-skill-2.0.0 ~/.opencode/skills/anysearch
+# Cursor/Windsurf: mv anysearch-skill-2.0.0 <project>/.skills/anysearch
+# Generic:        mv anysearch-skill-2.0.0 <your_agent_skill_dir>/anysearch
 ```
 
 ### For Humans
 
-1. Download the zip: https://github.com/anysearch-ai/anysearch-skill/archive/refs/heads/main.zip
+1. Download the zip: https://github.com/anysearch-ai/anysearch-skill/archive/refs/tags/v2.0.0.zip
 2. Unzip to your agent's skill directory
 3. Configure API key (see below)
 4. Run the entry test to verify installation
@@ -40,15 +43,15 @@ Copy the example env file and fill in your key:
 
 ```bash
 cp .env.example .env
-# Edit .env and set: ANYSEARCH_API_KEY=sk_xxxxxxxxxxxxxx
+# Edit .env and set: ANYSEARCH_API_KEY=<your_api_key_here>
 ```
 
 Or set the environment variable directly:
 
 ```bash
-export ANYSEARCH_API_KEY=sk_xxxxxxxxxxxxxx   # Linux/macOS
-set ANYSEARCH_API_KEY=sk_xxxxxxxxxxxxxx       # Windows CMD
-$env:ANYSEARCH_API_KEY="sk_xxxxxxxxxxxxxx"    # Windows PowerShell
+export ANYSEARCH_API_KEY=<your_api_key_here>   # Linux/macOS
+set ANYSEARCH_API_KEY=<your_api_key_here>       # Windows CMD
+$env:ANYSEARCH_API_KEY="<your_api_key_here>"    # Windows PowerShell
 ```
 
 ### Get an API Key
@@ -96,61 +99,44 @@ bash <skill_dir>/scripts/anysearch_cli.sh doc
 
 For each runtime, record whether the command succeeded and any errors/warnings encountered. The runtime that completes without errors and produces the cleanest output is the recommended runtime for this environment.
 
-### Step 3: Persist recommended runtime to SKILL.md
+### Step 3: Persist recommended runtime to configuration file
 
-Based on the entry test results, append the recommended runtime environment to the end of `<skill_dir>/SKILL.md`. This ensures the agent always uses the best runtime for the current platform on subsequent runs.
+Based on the entry test results, write the recommended runtime to `<skill_dir>/runtime.conf`:
 
-Append the following section (replace `<RUNTIME>` and `<COMMAND>` with the actual best runtime):
-
-```markdown
-
-## Recommended Runtime
-
-Runtime: <RUNTIME>
-Command: <COMMAND>
+```bash
+echo "Runtime: <RUNTIME>" > <skill_dir>/runtime.conf
+echo "Command: <COMMAND>" >> <skill_dir>/runtime.conf
 ```
 
 Example for Python:
 
-```markdown
-
-## Recommended Runtime
-
-Runtime: Python
-Command: python <skill_dir>/scripts/anysearch_cli.py
+```bash
+echo "Runtime: Python" > <skill_dir>/runtime.conf
+echo "Command: python <skill_dir>/scripts/anysearch_cli.py" >> <skill_dir>/runtime.conf
 ```
 
 Example for Node.js:
 
-```markdown
-
-## Recommended Runtime
-
-Runtime: Node.js
-Command: node <skill_dir>/scripts/anysearch_cli.js
+```bash
+echo "Runtime: Node.js" > <skill_dir>/runtime.conf
+echo "Command: node <skill_dir>/scripts/anysearch_cli.js" >> <skill_dir>/runtime.conf
 ```
 
 Example for PowerShell:
 
-```markdown
-
-## Recommended Runtime
-
-Runtime: PowerShell
-Command: powershell -ExecutionPolicy Bypass -File <skill_dir>/scripts/anysearch_cli.ps1
+```bash
+echo "Runtime: PowerShell" > <skill_dir>/runtime.conf
+echo "Command: powershell -ExecutionPolicy Bypass -File <skill_dir>/scripts/anysearch_cli.ps1" >> <skill_dir>/runtime.conf
 ```
 
 Example for Bash:
 
-```markdown
-
-## Recommended Runtime
-
-Runtime: Bash
-Command: bash <skill_dir>/scripts/anysearch_cli.sh
+```bash
+echo "Runtime: Bash" > <skill_dir>/runtime.conf
+echo "Command: bash <skill_dir>/scripts/anysearch_cli.sh" >> <skill_dir>/runtime.conf
 ```
 
-**Important:** This section MUST be appended to SKILL.md so the agent reads it on every skill load and uses the pre-detected runtime without re-probing. If the SKILL.md already contains a `## Recommended Runtime` section, replace it instead of appending.
+**Important:** Runtime preferences are stored in `runtime.conf`, NOT in SKILL.md. The agent reads `runtime.conf` on skill load to determine the active CLI. If the file is missing or corrupted, the agent falls back to the Platform Detection procedure in SKILL.md. If `runtime.conf` already exists, replace it instead of appending.
 
 ### Step 4 (optional): Test a real search
 
@@ -166,6 +152,8 @@ A successful JSON response confirms the API connection is working.
 anysearch/
 ├── .env.example              # API key configuration template
 ├── .env                      # Your API key (gitignored, create from .env.example)
+├── runtime.conf              # Detected runtime preferences (gitignored)
+├── runtime.conf.example      # Runtime configuration template
 ├── SKILL.md                  # Skill definition for AI agents
 ├── README.md                 # This file
 └── scripts/

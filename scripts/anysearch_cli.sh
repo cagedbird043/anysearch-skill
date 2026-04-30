@@ -532,7 +532,7 @@ bash scripts/anysearch_cli.sh search "AI regulation" --content_types news --fres
 ### Scenario 10: Search with API key
 
 ```bash
-bash scripts/anysearch_cli.sh search "climate change policy 2025" --api_key sk_xxxxxxxxxxxxxx --max_results 3
+bash scripts/anysearch_cli.sh search "climate change policy 2025" --api_key <your_api_key> --max_results 3
 ```
 
 ### Scenario 11: China-specific vertical search (requires zone=cn)
@@ -548,8 +548,8 @@ bash scripts/anysearch_cli.sh search "600519" --domain finance --sub_domain fina
 ---
 
 ## Rate Limit Handling
-- On rate limit error with auto_registered api_key in response: save key to .env, retry
-- On anonymous quota exhausted: prompt user to provide API key from https://anysearch.com/settings/api_keys
+- On rate limit error with auto_registered api_key in response: present key to user for approval, then save to .env and retry
+- On anonymous quota exhausted: inform user that a key provides higher limits; suggest configuring one via .env or environment variable
 DOCEOF
 }
 
