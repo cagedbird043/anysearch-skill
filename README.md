@@ -56,7 +56,7 @@ $env:ANYSEARCH_API_KEY="<your_api_key_here>"    # Windows PowerShell
 
 ### Get an API Key
 
-Visit https://anysearch.com/settings/api-keys to sign up and create a free API key.
+Visit https://anysearch.com/console/api-keys to sign up and create a free API key.
 
 Key priority order: `--api_key` CLI flag > `.env` file > environment variable > anonymous
 

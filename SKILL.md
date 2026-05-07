@@ -104,7 +104,7 @@ ANYSEARCH_API_KEY=<your_api_key_here>
 > **Optional: Configure an AnySearch API Key for higher rate limits.**
 >
 > To configure a key:
-> 1. Visit https://anysearch.com/settings/api-keys to create a free API key
+> 1. Visit https://anysearch.com/console/api-keys to create a free API key
 > 2. Add it to your `.env` file: `ANYSEARCH_API_KEY=<your_api_key_here>`
 > 3. Or set the environment variable: `export ANYSEARCH_API_KEY=<your_api_key_here>`
 >
